@@ -1,0 +1,26 @@
+---
+# This playbook intall apache on Ubuntu 16.04 and Jenkins on CentOS7.  
+
+- name: Install apache and configure web proxy  
+  hosts: admin 
+  become: True
+  roles:
+    - httpd 
+  tags:
+    - httpd
+
+- name: Install Jenkins and run it as a service
+  hosts: jenkins 
+  become: True
+  roles:
+    - jenkins 
+  tags:
+    - jenkins
+
+# - name: Install Nexus and run it as a service
+#   hosts: nexus 
+#   become: True
+#   roles:
+#     - nexus 
+#   tags:
+#     - nexus

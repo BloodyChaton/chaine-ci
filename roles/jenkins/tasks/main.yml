@@ -1,0 +1,31 @@
+---
+
+- name: CENTOS | Get Jenkins repo
+  yum_repository:
+    name: jenkins
+    description: Jenkins YUM repo
+    baseurl: http://pkg.jenkins-ci.org/redhat-stable/
+    enabled: yes
+
+- name: CENTOS | import Jenkins rpm key
+  rpm_key:
+    state: present
+    key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+
+- name: CENTOS | Install Jenkins
+  yum:
+    name: jenkins
+    state: present
+
+- name: CENTOS| install Java 
+  yum:
+    name:
+      - java-11-openjdk-devel
+    state: present
+
+  #  Configure Jenkins to run at adress 10.0.0.10:8080/jenkins 
+- name: Configure Jenkins 
+  template: src=jenkins.j2 dest=/etc/sysconfig/jenkins
+
+- name: CENTOS | Ensure Jenkins is running
+  service: name=jenkins state=started enabled=yes

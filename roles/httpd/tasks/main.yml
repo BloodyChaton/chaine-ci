@@ -1,0 +1,43 @@
+---
+- name: UBUNTU | Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: apache install   
+  apt:
+    name:
+    - apache2
+    state: present
+  tags:
+  - install
+
+- name: Ensure httpd is running
+  service: name=apache2 state=started enabled=yes
+
+- name: Enable necessary modules
+  apache2_module:
+    state: present
+    name: proxy
+- name: Enable necessary modules
+  apache2_module:
+    state: present
+    name: proxy_http
+- name: Enable necessary modules
+  apache2_module:
+    state: present
+    name: proxy_balancer
+- name: Enable necessary modules
+  apache2_module:
+    state: present
+    name: lbmethod_byrequests
+
+#  Configure virtual host 
+- name: Create virtual host 
+  template: src=apache2.conf.j2 dest=/etc/apache2/apache2.conf
+
+#  Configure virtual host 
+- name: Create virtual host 
+  template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.conf
+
+- name: Restart httpd is running
+  service: name=apache2 state=restarted
