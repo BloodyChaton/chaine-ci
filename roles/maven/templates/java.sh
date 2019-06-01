@@ -1,0 +1,3 @@
+JAVA_HOME=usr/bin/java
+PATH=$PATH:$JAVA_HOME/bin
+export PATH JAVA_HOME

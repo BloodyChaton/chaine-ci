@@ -24,3 +24,11 @@
     - nexus 
   tags:
     - nexus
+
+- name: Install Maven
+  hosts: maven 
+  become: True
+  roles:
+    - maven 
+  tags:
+    - maven

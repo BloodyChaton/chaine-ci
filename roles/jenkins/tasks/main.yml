@@ -23,6 +23,19 @@
       - java-11-openjdk-devel
     state: present
 
+- name: CENTOS | Install Git
+  yum:
+    name: git
+    state: present
+
+- name: Ensure Jenkins user exists
+  user:
+    name: "jenkins"
+    group: "jenkins"
+    groups: "wheel"
+    shell: "/bin/bash"
+    state: present
+
   #  Configure Jenkins to run at adress 10.0.0.10:8080/jenkins 
 - name: Configure Jenkins 
   template: src=jenkins.j2 dest=/etc/sysconfig/jenkins

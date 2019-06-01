@@ -1,0 +1,53 @@
+---
+# tasks file for maven
+
+- name : Download Java 1.8 
+  yum:
+    name: java-1.8.0-openjdk-devel
+    state: present
+
+- name: Ensure Jenkins group exists
+  group:
+    name: "jenkins"
+    state: present
+
+- name: Ensure Jenkins user exists
+  user:
+    name: "jenkins"
+    group: "jenkins"
+    groups: "wheel"
+    create_home: yes
+    home: "/var/lib/jenkins"
+    password: "jenkins"
+    shell: "/bin/bash"
+    state: present
+
+- name: Create a directory if it does not exist
+  file:
+    path: /home/jenkins/
+    state: directory
+    mode: '0755'
+
+- name: Download and Unarchive maven
+  unarchive:
+    src: "https://www-eu.apache.org/dist/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.tar.gz"
+    dest: "/opt"
+    copy: no
+
+- name: Configure maven and its environment variables
+  template: 
+    src: maven.sh
+    dest: /etc/profile.d/maven.sh
+
+- name: Configure Java environment variables
+  template: 
+    src: java.sh
+    dest: /etc/profile.d/maven.sh
+   
+# - name: Exports/Run maven env file for make M2_HOME available globally
+#   shell: reboot
+#   async: 0
+#   poll: 0
+
+# - name: Waiting for server to come back 
+#   local_action: wait_for host={{ inventory_hostname }} state=started

@@ -65,7 +65,7 @@
 # copier nexus.service
 - name: Copy nexus-defaults.properties
   template: 
-    src: nexus-defaults.properties.service.j2
+    src: nexus-default.properties.j2
     dest: /opt/nexus-3.16.1-02/etc/nexus-default.properties
     owner: nexus
     group: nexus
@@ -76,7 +76,5 @@
   command: systemctl daemon-reload
 
 # demarrer le service
-- name: démarrage du servive nexus
-  command: systemctl start nexus
-  become: true
-  become_user: nexus
+- name: démarrage du service nexus
+  command: systemctl start nexus.service
