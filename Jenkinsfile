@@ -16,6 +16,11 @@ pipeline{
         sh "mvn validate"
       }
     }
+    stage ('install'){
+      steps{
+        sh "mvn install"
+      }
+    }
     stage ('deploy'){
       steps{
         sh "mvn deploy -DskipTests"
