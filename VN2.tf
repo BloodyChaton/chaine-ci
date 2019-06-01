@@ -44,6 +44,31 @@ resource "azurerm_network_security_group" "myterraformnsg2" {
     destination_address_prefix = "*"
   }
 
+      security_rule {
+    name                       = "HTTP4"
+    priority                   = 1102
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8081"
+    source_address_prefix      = "${var.private_adress_subvn[1]}"
+    destination_address_prefix = "${var.private_adress_subvn[0]}"
+  }
+
+        security_rule {
+    name                       = "HTTP5"
+    priority                   = 1103
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "8081"
+    destination_port_range     = "*"
+    source_address_prefix      = "${var.private_adress_subvn[0]}"
+    destination_address_prefix = "*"
+  }
+
+
   security_rule {
     name                       = "SSH"
     priority                   = 1110

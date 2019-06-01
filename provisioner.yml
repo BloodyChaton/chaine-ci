@@ -17,10 +17,10 @@
   tags:
     - jenkins
 
-# - name: Install Nexus and run it as a service
-#   hosts: nexus 
-#   become: True
-#   roles:
-#     - nexus 
-#   tags:
-#     - nexus
+- name: Install Nexus and run it as a service
+  hosts: nexus 
+  become: True
+  roles:
+    - nexus 
+  tags:
+    - nexus

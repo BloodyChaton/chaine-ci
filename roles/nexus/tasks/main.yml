@@ -1,35 +1,82 @@
 ---
 # tasks file for nexus
 
-- name: NEXUS | install Java 
+- name : Download Java 1.8 
   yum:
-    name:
-      - java-1.8.0-openjdk-devel
+    name: java-1.8.0-openjdk-devel
     state: present
 
-- name: Add the user nexus
+# tasks file for ansible-nexus
+- name: Download nexus_package 
+  get_url: url=http://download.sonatype.com/nexus/3/nexus-3.16.1-02-unix.tar.gz dest=/opt
+
+- name: Ensure Nexus o/s group exists
+  group:
+    name: "nexus"
+    state: present
+
+- name: Ensure Nexus user exists
   user:
-    name: nexus
+    name: "nexus"
+    group: "nexus"
+    groups: "wheel"
+    shell: "/bin/bash"
+    state: present
 
-- name : Get the nexus archive file
+# unpack nexus
+- name: Unpack Nexus download
   unarchive:
-    src: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
-    dest: /opt/
-    remote_src: yes
+    src: "/opt/nexus-3.16.1-02-unix.tar.gz"
+    dest: "/opt"
+    force: no
+    copy: false
+    owner: "nexus"
+    group: "nexus"
+    mode: "0755"
+
+# permissions
+- name: Set permissions and ownership on Nexus directory
+  file:
+    path: /opt/nexus-3.16.1-02
+    state: "directory"
+    owner: "nexus"
+    group: "nexus"
+    mode: "0755"
+    recurse: true
+
+- name: Set permissions and ownership on Sonatype directory
+  file:
+    path: /opt/sonatype-work
+    state: "directory"
+    owner: "nexus"
+    group: "nexus"
+    mode: "0755"
+    recurse: true
+
+# copier nexus.service
+- name: Copy nexus.service
+  template: 
+    src: nexus.service.j2
+    dest: /etc/systemd/system/nexus.service
     owner: nexus
+    group: nexus
+    mode: u=rw,g=r,o=r
 
-- name: Configure Nexus to run as a service
-  template: src=nexus.service.j2 dest=/etc/systemd/system/nexus.service
+# copier nexus.service
+- name: Copy nexus-defaults.properties
+  template: 
+    src: nexus-defaults.properties.service.j2
+    dest: /opt/nexus-3.16.1-02/etc/nexus-default.properties
+    owner: nexus
+    group: nexus
+    mode: u=rwx,g=rx,o=rx
 
-- name: Reload Daemon
-  systemd:
-    daemon_reload: yes
+# Daemon reload
+- name: Daemon reload
+  command: systemctl daemon-reload
 
-- name: Start Nexus
-  systemd:
-    state: started
-    enabled: yes
-    name: nexus
-
-
- 
+# demarrer le service
+- name: démarrage du servive nexus
+  command: systemctl start nexus
+  become: true
+  become_user: nexus

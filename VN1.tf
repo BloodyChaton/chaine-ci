@@ -59,6 +59,30 @@ resource "azurerm_network_security_group" "myterraformnsg" {
     destination_address_prefix = "${var.private_adress_subvn[1]}"
   }
 
+    security_rule {
+    name                       = "Jenkins"
+    priority                   = 1020
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8080"
+    source_address_prefix      = "*"
+    destination_address_prefix = "${var.private_adress_subvn[0]}"
+  }
+
+      security_rule {
+    name                       = "Nexus"
+    priority                   = 1030
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8081"
+    source_address_prefix      = "*"
+    destination_address_prefix = "${var.private_adress_subvn[0]}"
+  }
+
   tags {
     environment = "dev"
   }
