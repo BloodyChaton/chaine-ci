@@ -42,7 +42,7 @@
 - name: Configure Java environment variables
   template: 
     src: java.sh
-    dest: /etc/profile.d/maven.sh
+    dest: /etc/profile.d/java.sh
    
 # - name: Exports/Run maven env file for make M2_HOME available globally
 #   shell: reboot
