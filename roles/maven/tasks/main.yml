@@ -6,6 +6,11 @@
     name: java-1.8.0-openjdk-devel
     state: present
 
+- name : Install Git 
+  yum:
+    name: git
+    state: present
+
 - name: Ensure Jenkins group exists
   group:
     name: "jenkins"
